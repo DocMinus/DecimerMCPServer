@@ -1,5 +1,7 @@
 # DecimerMCPServer
 
+Under Development - maintenance ongoing
+
 MCP server that exposes DECIMER image-to-SMILES functionality as tool calls.
 
 This project is a thin adapter over the existing FastAPI service in `DecimerServerAPI`.
