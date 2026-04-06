@@ -93,14 +93,45 @@ uv sync --extra dev
 uv run pytest
 ```
 
+Make targets:
+
+```bash
+make sync
+make test
+```
+
 ## Smoke test helper
 
 Run one health check + one inference call against your DECIMER API:
 
 ```bash
-cd ~/Users/a~/dev/DecimerMCPServer
-DECIMER_API_BASE_URL=http://localhost:8099 uv run decimer-mcp-smoke-test --image ~/dev/DecimerServerAPI/example_usage/structure.png
+cd /Users/a/dev/DecimerMCPServer
+DECIMER_API_BASE_URL=http://chitchat:8099 uv run decimer-mcp-smoke-test --image /Users/a/dev/DecimerServerAPI/example_usage/structure.png
+```
+
+If you keep settings in `.env`, load it with:
+
+```bash
+uv run --env-file .env decimer-mcp-smoke-test --image /Users/a/dev/DecimerServerAPI/example_usage/structure.png
+```
+
+or use make:
+
+```bash
+make smoke
+```
+
+Override the image path if needed:
+
+```bash
+make smoke SMOKE_IMAGE=/absolute/path/to/image.png
 ```
 
 ## Contribution
-OpenCode based creation by DocMinus.
+This project was built by DocMinus with AI-assisted coding support (OpenCode/Copilot-style tooling), then reviewed and tested by the author.
+
+## AI usage policy
+
+- AI assistance was used for scaffolding, implementation drafts, and documentation edits.
+- Final technical decisions, validation runs, and acceptance were performed by the maintainer.
+- Runtime behavior should be validated with local tests (`make test`) and smoke tests (`make smoke`) before release.

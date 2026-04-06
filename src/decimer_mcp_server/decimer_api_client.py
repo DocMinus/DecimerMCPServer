@@ -115,8 +115,8 @@ class DecimerAPIClient:
                 ok=True,
                 status_code=200,
                 smiles=None,
-                message="No SMILES returned by API",
-                reason="no_smiles_returned",
+                message=payload.get("message", "No SMILES returned by API"),
+                reason=payload.get("reason", "no_smiles_returned"),
             )
 
         return APIResult(ok=True, status_code=200, smiles=smiles)
