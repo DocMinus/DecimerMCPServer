@@ -4,6 +4,7 @@ MCP server that exposes DECIMER image-to-SMILES functionality as tool calls.
 
 This project is a thin adapter over the existing FastAPI service in `DecimerServerAPI`.
 It does not run DECIMER models directly.
+The adapter sends JSON requests by default, with automatic fallback to form payloads for compatibility.
 
 ## Tools
 
@@ -70,7 +71,10 @@ uv run python -m decimer_mcp_server
   "smiles": "CCO",
   "reason": null,
   "api_status_code": 200,
-  "api_message": null
+  "api_message": null,
+  "classifier_score": 0.0000012,
+  "classifier_threshold": 0.3,
+  "classifier_decision": "structure_like"
 }
 ```
 
@@ -80,9 +84,12 @@ When no SMILES is returned by API classifier behavior:
 {
   "ok": true,
   "smiles": null,
-  "reason": "no_smiles_returned",
+  "reason": "not_chemical_structure",
   "api_status_code": 200,
-  "api_message": "No SMILES returned by API"
+  "api_message": "No SMILES returned by API",
+  "classifier_score": 0.99999,
+  "classifier_threshold": 0.3,
+  "classifier_decision": "not_structure_like"
 }
 ```
 

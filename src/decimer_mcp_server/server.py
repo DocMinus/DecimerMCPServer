@@ -66,5 +66,8 @@ async def analyze_chemical_image(
         reason=result.reason,
         api_status_code=result.status_code,
         api_message=result.message,
+        classifier_score=result.classifier_score,
+        classifier_threshold=result.classifier_threshold,
+        classifier_decision=result.classifier_decision,
     )
     return output.model_dump()

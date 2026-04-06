@@ -13,6 +13,9 @@ class APIResult:
     smiles: str | None = None
     message: str | None = None
     reason: str | None = None
+    classifier_score: float | None = None
+    classifier_threshold: float | None = None
+    classifier_decision: str | None = None
 
 
 class DecimerAPIClient:
@@ -72,6 +75,11 @@ class DecimerAPIClient:
     ) -> APIResult:
         self._validate_image_size(encoded_image)
         url = f"{self.base_url}/image2smiles/"
+        json_payload = {
+            "encoded_image": encoded_image,
+            "is_hand_drawn": is_hand_drawn,
+            "classify_image": classify_image,
+        }
         form_data = {
             "encoded_image": encoded_image,
             "is_hand_drawn": str(is_hand_drawn).lower(),
@@ -80,7 +88,9 @@ class DecimerAPIClient:
 
         try:
             async with httpx.AsyncClient(timeout=self.timeout_seconds) as client:
-                response = await client.post(url, data=form_data)
+                response = await client.post(url, json=json_payload)
+                if response.status_code in {400, 415, 422}:
+                    response = await client.post(url, data=form_data)
         except httpx.TimeoutException:
             return APIResult(
                 ok=False,
@@ -117,6 +127,16 @@ class DecimerAPIClient:
                 smiles=None,
                 message=payload.get("message", "No SMILES returned by API"),
                 reason=payload.get("reason", "no_smiles_returned"),
+                classifier_score=payload.get("classifier_score"),
+                classifier_threshold=payload.get("classifier_threshold"),
+                classifier_decision=payload.get("classifier_decision"),
             )
 
-        return APIResult(ok=True, status_code=200, smiles=smiles)
+        return APIResult(
+            ok=True,
+            status_code=200,
+            smiles=smiles,
+            classifier_score=payload.get("classifier_score"),
+            classifier_threshold=payload.get("classifier_threshold"),
+            classifier_decision=payload.get("classifier_decision"),
+        )

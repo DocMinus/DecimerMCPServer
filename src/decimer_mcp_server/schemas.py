@@ -38,6 +38,9 @@ class AnalyzeChemicalImageOutput(BaseModel):
     reason: str | None = None
     api_status_code: int
     api_message: str | None = None
+    classifier_score: float | None = None
+    classifier_threshold: float | None = None
+    classifier_decision: str | None = None
 
 
 class ServerHealthOutput(BaseModel):
