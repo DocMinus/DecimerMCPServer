@@ -141,6 +141,7 @@ Workflow steps:
 - installs `mcp-publisher`
 - validates `server.json`
 - calls registry publish using secret `MCP_REGISTRY_TOKEN`
+- publishes slug `io.github.DocMinus/decimer-mcp-server` (case sensitive; must match registry grant)
 
 Before tagging:
 1. Update `pyproject.toml` + `server.json` versions
