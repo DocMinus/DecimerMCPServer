@@ -32,8 +32,12 @@ jsonschema.validate(data, schema)
 print('✅ server.json valid!')
 "
 
-      - name: Publish to Registry
+      - name: Login to MCP Registry
         env:
-          GITHUB_TOKEN: ${{ secrets.MCP_REGISTRY_TOKEN }}
+          MCP_REGISTRY_TOKEN: ${{ secrets.MCP_REGISTRY_TOKEN }}
+        run: |
+          mcp-publisher login github --token "$MCP_REGISTRY_TOKEN"
+
+      - name: Publish to Registry
         run: |
           mcp-publisher publish --file server.json
