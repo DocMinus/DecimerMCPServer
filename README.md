@@ -18,6 +18,10 @@ The adapter sends JSON requests by default, with automatic fallback to form payl
 - Python 3.10+
 - Running DECIMER API server (default: `http://localhost:8099`)
 
+find it at either of these two versions:
+- GitHub: https://github.com/DocMinus/DecimerServerAPI
+- Dockerhub: https://hub.docker.com/r/docminus/decimer_api
+
 ## Install
 
 ```bash
