@@ -1,4 +1,4 @@
-name: Validate MCP Registry Config
+name: Publish to MCP Registry
 
 on:
   push:
@@ -7,10 +7,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  validate:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Install mcp-publisher CLI
+        run: |
+          go install github.com/modelcontextprotocol/registry/cmd/publisher@latest
 
       - name: Validate server.json
         run: |
@@ -22,3 +31,9 @@ data = json.load(open('server.json'))
 jsonschema.validate(data, schema)
 print('✅ server.json valid!')
 "
+
+      - name: Publish to Registry
+        env:
+          GITHUB_TOKEN: ${{ secrets.MCP_REGISTRY_TOKEN }}
+        run: |
+          mcp-publisher publish --file server.json
