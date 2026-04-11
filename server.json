@@ -3,12 +3,12 @@
   "name": "io.github.DocMinus/decimer-mcp-server",
   "title": "DECIMER MCP Server",
   "description": "MCP server for DECIMER image-to-SMILES chemical structure recognition",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "decimer-mcp-server",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "transport": {
         "type": "stdio"
       },

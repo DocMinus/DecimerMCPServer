@@ -1,6 +1,6 @@
 [project]
 name = "decimer-mcp-server"
-version = "0.1.1"
+version = "0.1.2"
 description = "MCP adapter server for DECIMER FastAPI image-to-SMILES endpoint"
 readme = "README.md"
 requires-python = ">=3.10"
