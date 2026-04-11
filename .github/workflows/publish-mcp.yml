@@ -24,6 +24,7 @@ jobs:
       - name: Install mcp-publisher CLI
         run: |
           go install github.com/modelcontextprotocol/registry/cmd/publisher@latest
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
       - name: Validate server.json
         run: |
