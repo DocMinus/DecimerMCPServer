@@ -2,10 +2,6 @@ name: Publish to MCP Registry
 
 on:
   workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Tag to publish (optional, defaults to main)'
-        required: false
   push:
     tags:
       - 'v*'
@@ -13,54 +9,34 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.22'
-
-      - name: Install mcp-publisher CLI
+      - name: Install mcp-publisher
         run: |
-          BIN_DIR="$(go env GOPATH)/bin"
-          mkdir -p "$BIN_DIR"
-          go install github.com/modelcontextprotocol/registry/cmd/publisher@latest
-          echo "$BIN_DIR" >> "$GITHUB_PATH"
-          if [ -x "$BIN_DIR/publisher" ] && [ ! -e "$BIN_DIR/mcp-publisher" ]; then
-            ln -s "$BIN_DIR/publisher" "$BIN_DIR/mcp-publisher"
-          fi
-          ls -al "$BIN_DIR"
-          if [ ! -x "$BIN_DIR/mcp-publisher" ]; then
-            echo "mcp-publisher missing from $BIN_DIR" >&2
-            exit 1
-          fi
-          echo "MCP_PUBLISHER_BIN=$BIN_DIR/mcp-publisher" >> "$GITHUB_ENV"
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" \
+            | tar xz mcp-publisher
+          chmod +x mcp-publisher
 
       - name: Validate server.json
         run: |
-          pip install jsonschema
+          pip install --quiet jsonschema
           python - <<'PY'
-          import json
-          import jsonschema
-          import urllib.request
-
-          schema = json.loads(
-              urllib.request.urlopen(
-                  'https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json'
-              ).read()
-          )
+          import json, jsonschema, urllib.request
+          schema = json.loads(urllib.request.urlopen(
+              'https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json'
+          ).read())
           data = json.load(open('server.json'))
           jsonschema.validate(data, schema)
-          print('✅ server.json valid!')
+          print('server.json valid')
           PY
 
-      - name: Login to MCP Registry
-        env:
-          MCP_REGISTRY_TOKEN: ${{ secrets.MCP_REGISTRY_TOKEN }}
-        run: |
-          "$MCP_PUBLISHER_BIN" login github --token "$MCP_REGISTRY_TOKEN"
+      - name: Authenticate to MCP Registry
+        run: ./mcp-publisher login github-oidc
 
-      - name: Publish to Registry
-        run: |
-          "$MCP_PUBLISHER_BIN" publish --file server.json
+      - name: Publish to MCP Registry
+        run: ./mcp-publisher publish
