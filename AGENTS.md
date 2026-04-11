@@ -1,33 +1,38 @@
 # Project Agent Rules
 
-## Image Attachment Handling Rule
+## Image Attachment Handling
 
-When a user attaches an image, follow this template exactly:
+User attaches image → execute:
 
-1. Use the `decimer` MCP tool only.
-2. Call `analyze_chemical_image` on the attached image.
-3. Return compact JSON only, with no extra text:
+1. Call `decimer_analyze_chemical_image` on attached image
+2. Return compact JSON only:
 
 ```json
 {"is_structure": <true|false>, "smiles": <string|null>, "reason": <string|null>}
 ```
 
-Additional requirements:
-- No markdown fences in final output.
-- No explanation, prefix, or suffix text.
-- Keep `smiles` as `null` when no structure is detected.
-- Keep `reason` as `null` when classification succeeds without an error reason.
+Requirements:
+- No markdown fences
+- No explanation/prefix/suffix
+- `smiles: null` when no structure detected
+- `reason: null` when classification succeeds
 
-## MCP Registry Publishing Reference
+## MCP Registry Publishing
 
-When asked about publishing this MCP server to the MCP Registry, follow this baseline workflow:
+Trigger: Tag push (`v*`) or manual dispatch.
 
-1. Ensure `server.json` exists at the repository root with complete, current metadata.
-2. Validate `server.json` against the official schema:
-   `https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json`.
-3. Prefer automated publishing via GitHub Actions using
-   `modelcontextprotocol/registry-action@v1`.
-4. Verify the server appears in the registry after publishing.
+Workflow:
+1. Validate `server.json` against schema
+2. Publish via `modelcontextprotocol/registry-action@v1`
+3. Verify registry listing
 
-Reference article:
-- `https://mcpplaygroundonline.com/blog/how-to-publish-your-mcp-server-to-registry`
+Manual publish:
+```bash
+# Validate
+uv pip install jsonschema
+python -c "import json, jsonschema, urllib.request; schema = json.loads(urllib.request.urlopen('https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json').read()); data = json.load(open('server.json')); jsonschema.validate(data, schema); print('Valid!')"
+
+# Publish (requires auth token in secrets)
+```
+
+Registry: https://registry.modelcontextprotocol.io

@@ -4,3 +4,7 @@ __pycache__/
 *.pyc
 .DS_Store
 .opencode
+gnurff*
+structure.png
+not_structure.gif
+AGENTS.md

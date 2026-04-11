@@ -1,0 +1,32 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "io.github.docminus/decimer-mcp-server",
+  "title": "DECIMER MCP Server",
+  "description": "MCP server for DECIMER image-to-SMILES chemical structure recognition",
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "decimer-mcp-server",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "runtimeHint": "uvx"
+    }
+  ],
+  "tools": [
+    {
+      "name": "server_health",
+      "description": "Check DECIMER FastAPI server availability"
+    },
+    {
+      "name": "analyze_chemical_image",
+      "description": "Analyze a base64-encoded chemical structure image and return predicted SMILES string"
+    }
+  ],
+  "repository": {
+    "url": "https://github.com/DocMinus/DecimerMCPServer",
+    "source": "github"
+  }
+}
