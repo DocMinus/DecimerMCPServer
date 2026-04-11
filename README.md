@@ -1,7 +1,5 @@
 # DecimerMCPServer
 
-Under Development - maintenance ongoing
-
 MCP server that exposes DECIMER image-to-SMILES functionality as tool calls.
 
 This project is a thin adapter over the existing FastAPI service in `DecimerServerAPI`.
@@ -134,6 +132,28 @@ Override the image path if needed:
 
 ```bash
 make smoke SMOKE_IMAGE=/absolute/path/to/image.png
+
+## MCP Registry publishing
+
+Tags matching `v*` trigger `.github/workflows/publish-mcp.yml`.
+
+Workflow steps:
+- installs `mcp-publisher`
+- validates `server.json`
+- calls registry publish using secret `MCP_REGISTRY_TOKEN`
+
+Before tagging:
+1. Update `pyproject.toml` + `server.json` versions
+2. Ensure `server.json` stays valid (`uv pip install jsonschema && python validate snippet from AGENTS.md`)
+3. Add GitHub repo secret `MCP_REGISTRY_TOKEN` (GitHub PAT with `repo`, `workflow` scopes)
+
+Release flow:
+```bash
+git tag v0.1.1
+git push origin v0.1.1
+```
+
+Monitor Actions tab. If publish fails, rerun using workflow dispatch after fixing issues.
 ```
 
 ## Contribution
