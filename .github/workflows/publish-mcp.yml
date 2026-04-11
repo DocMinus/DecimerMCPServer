@@ -19,7 +19,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24'
+          go-version: '1.22'
 
       - name: Install mcp-publisher CLI
         run: |
@@ -28,13 +28,20 @@ jobs:
       - name: Validate server.json
         run: |
           pip install jsonschema
-          python -c "
-import json, jsonschema, urllib.request
-schema = json.loads(urllib.request.urlopen('https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json').read())
-data = json.load(open('server.json'))
-jsonschema.validate(data, schema)
-print('✅ server.json valid!')
-"
+          python - <<'PY'
+          import json
+          import jsonschema
+          import urllib.request
+
+          schema = json.loads(
+              urllib.request.urlopen(
+                  'https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json'
+              ).read()
+          )
+          data = json.load(open('server.json'))
+          jsonschema.validate(data, schema)
+          print('✅ server.json valid!')
+          PY
 
       - name: Login to MCP Registry
         env:
