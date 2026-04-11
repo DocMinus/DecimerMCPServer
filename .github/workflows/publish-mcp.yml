@@ -27,6 +27,9 @@ jobs:
           mkdir -p "$BIN_DIR"
           go install github.com/modelcontextprotocol/registry/cmd/publisher@latest
           echo "$BIN_DIR" >> "$GITHUB_PATH"
+          if [ -x "$BIN_DIR/publisher" ] && [ ! -e "$BIN_DIR/mcp-publisher" ]; then
+            ln -s "$BIN_DIR/publisher" "$BIN_DIR/mcp-publisher"
+          fi
           ls -al "$BIN_DIR"
           if [ ! -x "$BIN_DIR/mcp-publisher" ]; then
             echo "mcp-publisher missing from $BIN_DIR" >&2
