@@ -1,10 +1,14 @@
 name: Publish to MCP Registry
 
 on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to publish (optional, defaults to main)'
+        required: false
   push:
     tags:
       - 'v*'
-  workflow_dispatch: {}
 
 jobs:
   publish:
