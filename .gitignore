@@ -2,9 +2,18 @@
 .pytest_cache/
 __pycache__/
 *.pyc
-.DS_Store
-.opencode
+*.egg-info/
 gnurff*
 structure.png
 not_structure.gif
 AGENTS.md
+
+# macOS
+.DS_Store
+._*
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+
+*.env
